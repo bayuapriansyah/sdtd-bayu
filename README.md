@@ -70,4 +70,188 @@ ini arinya GraphQL mengorkestrasi IPC secara internal, menggabungkan banyak pang
 
 ## 3. Dengan menggunakan Docker / Docker Compose, buatlah streaming replication di PostgreSQL yang bisa menjelaskan sinkronisasi. Tulislah langkah-langkah pengerjaannya dan buat penjelasan secukupnya.
 
+# Streaming Replication PostgreSQL 18 dengan Docker & Docker Compose
+
+Repository ini berisi konfigurasi lengkap untuk membangun **Streaming Replication** pada PostgreSQL 18 (alpine) menggunakan Docker Compose.  
+Terdapat **Primary Node** dan **Replica Node** yang tersinkronisasi secara real-time menggunakan **physical replication** + **replication slot**.
+
+---
+
+## Struktur Folder
+streaming-replication-uts/
+│── 00_init.sql
+│── docker-compose.yaml
+└── env.sh
+
+
+
+---
+
+# Penjelasan Streaming Replication
+
+**Streaming replication** adalah metode replikasi PostgreSQL yang mengirim WAL (Write-Ahead Log) secara kontinu dari primary ke replica.
+
+Kelebihannya:
+
+- Sinkronisasi real-time  
+- Read-only query dari replica  
+- High Availability (HA)  
+- WAL aman berkat replication slot  
+
+---
+
+# 2️ Penjelasan File
+
+## 00_init.sql
+
+Script inisialisasi yang dijalankan ketika PostgreSQL primary pertama kali dibuat.
+
+```sql
+CREATE USER replicator WITH REPLICATION ENCRYPTED PASSWORD 'replicator_password';
+SELECT pg_create_physical_replication_slot('replication_slot');
+
+```
+Fungsi:
+Membuat user khusus untuk replikasi
+ dan Membuat replication slot agar WAL tidak hilang sebelum dikonsumsi replica
+
+ ## docker-compose.yaml
+
+Terdiri dari dua service utama:
+postgres_primary
+Konfigurasi utama:
+
+Port: 5432
+
+Init script otomatis dijalankan
+
+Parameter replikasi:
+```
+wal_level=replica
+max_wal_senders=10
+max_replication_slots=10
+hot_standby=on
+hot_standby_feedback=on
+```
+
+postgres_replica
+
+Fungsi: mengambil backup dari primary lalu masuk mode streaming.
+
+Menggunakan:
+```
+pg_basebackup -R --slot=replication_slot --host=postgres_primary --port=5432 -X stream
+```
+Hasil: node menjadi hot standby.
+
+## env.sh
+
+Alias command untuk mempermudah:
+```
+alias dcu="sudo docker-compose up -d"
+alias dcd="sudo docker-compose down"
+alias dps="sudo docker ps"
+alias der="sudo docker exec -it streaming-replication-uts_postgres_replica_1 bash"
+alias dep="sudo docker exec -it streaming-replication-uts_postgres_primary_1 bash"
+alias dlr="sudo docker logs streaming-replication-uts_postgres_replica_1"
+alias dlp="sudo docker logs streaming-replication-uts_postgres_primary_1"
+```
+
+lalu aktifkan:
+```
+source env.sh
+```
+# Menjalankan Replikasi
+
+Menjalankan container
+```
+dcu
+```
+Mengecek container
+```
+dps
+```
+
+Akan muncul:
+
+maka akan muncul postgres_primary dan postgres_replica
+
+Mengecek Status Replikasi
+Mengecek dari PRIMARY
+
+Masuk:
+
+dep
+psql -U zuser -d zdb
+
+
+Cek:
+
+SELECT * FROM pg_stat_replication;
+
+
+Jika berhasil → state = streaming.
+
+# Mengecek dari REPLICA
+
+Masuk:
+```
+der
+psql -U zuser -d zdb
+```
+
+Cek apakah sedang recovery:
+```
+SELECT pg_is_in_recovery();
+```
+
+Hasil yang benar:
+
+```
+t
+```
+
+# Pengujian Sinkronisasi
+ Buat tabel dan insert di PRIMARY
+ ```
+CREATE TABLE test_replica (first INT, second VARCHAR(15));
+INSERT INTO test_replica VALUES (10, 'TEST REPLICA');
+INSERT INTO test_replica VALUES (10, 'TEST REPLICA 2');
+```
+Cek di REPLICA
+```
+SELECT * FROM test_replica;
+```
+
+Jika datanya sama → Replikasi berhasil.
+
+ # Failover: Promote Replica
+* Stop primary
+```
+sudo docker-compose stop postgres_primary
+```
+
+Promote replica menjadi primary baru
+```
+SELECT pg_promote();
+```
+
+Cek:
+```
+SELECT pg_is_in_recovery();
+```
+
+Jika hasil = f → Replica telah menjadi Primary.
+
+* Kesimpulan
+
+Primary dan Replica tersinkronisasi melalui WAL streaming
+
+Replica dapat mengambil alih menjadi Primary (failover)
+
+Docker Compose mempermudah proses setup cluster PostgreSQL untuk belajar/pengujian
+
+Replication slot memastikan WAL tidak hilang sebelum dikonsumsi
+
+
 
