@@ -1,5 +1,6 @@
 # UTS-STDT
 1. Jelaskan teorema CAP dan BASE dan keterkaitan keduanya. Jelaskan menggunakan contoh yang pernah anda gunakan.
+
 => CAP theorem (Brewer)
     Dalam sistem terdistribusi, tiga properti berikut tidak bisa semuanya dijaga sempurna pada saat terjadi partition (hubungan jaringan terputus):
     C = Consistency: Setelah operasi selesai, semua node melihat data yang sama (sangat kuat). 
@@ -22,6 +23,6 @@
 
 2. Jelaskan keterkaitan antara GraphQL dengan komunikasi antar proses pada sistem terdistribusi. Buat diagramnya.
 
-=>
-Keterkaitan GraphQL dengan komunikasi antar proses pada sistem terdistribusi terletak pada perannya sebagai API Gateway yang bertugas menghubungkan client dengan berbagai microservice di backend. Ketika client mengirim satu query GraphQL, server GraphQL tidak hanya memprosesnya secara lokal, tetapi menjalankan beberapa komunikasi antar proses (IPC) ke berbagai service berbeda seperti User Service, Order Service, atau Inventory Service. Setiap resolver dalam GraphQL dapat berhubungan dengan proses lain melalui HTTP REST, gRPC, message queue, atau database call. Dengan kata lain: GraphQL mengorkestrasi IPC secara internal, menggabungkan banyak panggilan antar-proses menjadi satu respons terstruktur untuk client.
-   
+    =>
+    Keterkaitan GraphQL dengan komunikasi antar proses pada sistem terdistribusi terletak pada perannya sebagai API Gateway yang bertugas menghubungkan client dengan berbagai microservice di backend. Ketika client mengirim satu query GraphQL, server GraphQL tidak hanya memprosesnya secara lokal, tetapi menjalankan beberapa komunikasi antar proses (IPC) ke berbagai service berbeda seperti User Service, Order Service, atau Inventory Service. Setiap resolver dalam GraphQL dapat berhubungan dengan proses lain melalui HTTP REST, gRPC, message queue, atau database call. Dengan kata lain: GraphQL mengorkestrasi IPC secara internal, menggabungkan banyak panggilan antar-proses menjadi satu respons terstruktur untuk client.
+       
