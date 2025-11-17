@@ -1,4 +1,6 @@
 # UTS-STDT
+# NIM : 245410076
+# NAMA : Bayu Apriansyah Putra
 
 ## 1. Jelaskan teorema CAP dan BASE dan keterkaitan keduanya. Jelaskan menggunakan contoh yang pernah anda gunakan.
 
