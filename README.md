@@ -67,3 +67,7 @@ ini arinya GraphQL mengorkestrasi IPC secara internal, menggabungkan banyak pang
       User Service     Order Service    Inventory Service
     (IPC: REST/gRPC) (IPC: REST/gRPC) (IPC: REST/gRPC)
 
+
+## 3. Dengan menggunakan Docker / Docker Compose, buatlah streaming replication di PostgreSQL yang bisa menjelaskan sinkronisasi. Tulislah langkah-langkah pengerjaannya dan buat penjelasan secukupnya.
+
+
