@@ -19,3 +19,7 @@
    
    Contoh konteks (menggunakan project Sistem Streaming Replication + PostgreSQL yang pernah dibuat):
   Seperti Sistem Streaming Replication PostgreSQL 18 yang saya bangun merupakan contoh nyata penerapan CAP & BASE. Pada konfigurasi default (asynchronous), cluster PostgreSQL memilih AP dan mengikuti prinsip BASE: sistem tetap available meskipun data antar node belum konsisten, dan akan konsisten pada akhirnya. Apabila diubah menjadi synchronous replication, PostgreSQL berubah menjadi sistem CP, yaitu mengutamakan konsistensi dengan mengorbankan availability. Dengan demikian, proyek streaming replication tersebut sangat tepat sebagai ilustrasi bagaimana CAP dan BASE diterapkan pada sistem terdistribusi modern.
+
+2. Jelaskan keterkaitan antara GraphQL dengan komunikasi antar proses pada sistem terdistribusi. Buat diagramnya.
+=> Keterkaitan GraphQL dengan komunikasi antar proses pada sistem terdistribusi terletak pada perannya sebagai API Gateway yang bertugas menghubungkan client dengan berbagai microservice di backend. Ketika client mengirim satu query GraphQL, server GraphQL tidak hanya memprosesnya secara lokal, tetapi menjalankan beberapa komunikasi antar proses (IPC) ke berbagai service berbeda seperti User Service, Order Service, atau Inventory Service. Setiap resolver dalam GraphQL dapat berhubungan dengan proses lain melalui HTTP REST, gRPC, message queue, atau database call. Dengan kata lain: GraphQL mengorkestrasi IPC secara internal, menggabungkan banyak panggilan antar-proses menjadi satu respons terstruktur untuk client.
+   
