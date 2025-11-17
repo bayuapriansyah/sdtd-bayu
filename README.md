@@ -54,4 +54,14 @@ Dengan kata lain: GraphQL mengorkestrasi IPC secara internal, menggabungkan bany
 ---
 
 ## Diagram
+               Client
+                  │
+                  │ Query GraphQL
+                  ▼
+         GraphQL Server (API Gateway)
+             ┌───────────────┬───────────────┐
+             │               │               │
+             ▼               ▼               ▼
+      User Service     Order Service    Inventory Service
+    (IPC: REST/gRPC) (IPC: REST/gRPC) (IPC: REST/gRPC)
 
