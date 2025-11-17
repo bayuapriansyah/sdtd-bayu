@@ -77,7 +77,7 @@ Terdapat **Primary Node** dan **Replica Node** yang tersinkronisasi secara real-
 
 ---
 
-## Struktur Folder
+# Struktur Folder
 streaming-replication-uts/
 │── 00_init.sql
 │── docker-compose.yaml
@@ -102,7 +102,7 @@ Kelebihannya:
 
 # 2️ Penjelasan File
 
-## 00_init.sql
+# 00_init.sql
 
 Script inisialisasi yang dijalankan ketika PostgreSQL primary pertama kali dibuat.
 
@@ -115,7 +115,7 @@ Fungsi:
 Membuat user khusus untuk replikasi
  dan Membuat replication slot agar WAL tidak hilang sebelum dikonsumsi replica
 
- ## docker-compose.yaml
+ # docker-compose.yaml
 
 Terdiri dari dua service utama:
 postgres_primary
@@ -144,7 +144,7 @@ pg_basebackup -R --slot=replication_slot --host=postgres_primary --port=5432 -X 
 ```
 Hasil: node menjadi hot standby.
 
-## env.sh
+# env.sh
 
 Alias command untuk mempermudah:
 ```
