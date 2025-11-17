@@ -49,7 +49,7 @@ Setiap resolver dalam GraphQL dapat berhubungan dengan proses lain melalui:
 - Message queue  
 - Database call  
 
-Dengan kata lain: GraphQL mengorkestrasi IPC secara internal, menggabungkan banyak panggilan antar-proses menjadi satu respons terstruktur untuk client.
+ini arinya GraphQL mengorkestrasi IPC secara internal, menggabungkan banyak panggilan antar-proses menjadi satu respons terstruktur untuk client.
 
 ---
 
