@@ -1,17 +1,19 @@
 # UTS-STDT
 1. Jelaskan teorema CAP dan BASE dan keterkaitan keduanya. Jelaskan menggunakan contoh yang pernah anda gunakan.
-=> CAP theorem (Brewer) — Dalam sistem terdistribusi, tiga properti berikut tidak bisa semuanya dijaga sempurna pada saat terjadi partition (hubungan jaringan terputus):
+=> CAP theorem (Brewer)
+    Dalam sistem terdistribusi, tiga properti berikut tidak bisa semuanya dijaga sempurna pada saat terjadi partition (hubungan jaringan terputus):
     C = Consistency: Setelah operasi selesai, semua node melihat data yang sama (sangat kuat). 
     A = Availability: Setiap permintaan akan mendapatkan respons (tidak error).
     P = Partition tolerance: Sistem tetap berfungsi walau ada partisi jaringan.
     Intinya: Saat ada partition, harus memilih antara Consistency atau Availability (P sudah harus ditolerir karena jaringan tidak sempurna).
 
-    BASE — filosofi yang sering dipakai pada sistem eventually consistent (terutama NoSQL, caching, dsb):    
+    BASE
+    filosofi yang sering dipakai pada sistem eventually consistent (terutama NoSQL, caching, dsb):    
     B = Basically Available (tersedia secara dasar)
     A = Soft-state (state bisa berubah seiring waktu tanpa input baru)
     SE = Eventual consistency (akhirnya konsisten)
 
-    Keterkaitan CAP ↔ BASE:
+    Keterkaitan CAP dan BASE:
     
     BASE adalah pendekatan praktis ketika memilih AP (Availability + Partition tolerance) dalam CAP: sistem memilih tetap melayani permintaan meski konsistensi langsung tidak dijamin, dengan janji eventual            consistency. Sebaliknya, kalau memilih CP, sistem akan lebih ketat pada konsistensi (misalnya menggunakan locking, quorum writes) dan mungkin menolak atau menunda operasi saat partisi (mengorbankan availability).
    
